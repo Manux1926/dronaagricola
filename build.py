@@ -312,6 +312,13 @@ def std_pages(s):
     return [hub, despre, contact, priv, nf]
 
 
+def relpaths(h):
+    """Rutas relativas: funcionan en usuario.github.io/repo/ y en el dominio propio."""
+    h = h.replace('href="/"', 'href="./"').replace('href="/#', 'href="./#')
+    h = re.sub(r'(href|src)="/(?!/)', r'\1="', h)
+    return h
+
+
 def build(sid):
     mod = importlib.import_module('site_' + sid)
     s = mod.SITE
@@ -324,7 +331,8 @@ def build(sid):
     s_all = dict(s)
     for p in pages:
         with open(os.path.join(out, ('index' if p['slug'] == 'index' else p['slug']) + '.html'), 'w') as f:
-            f.write(render(s, p))
+            page = render(s, p)
+            f.write(page if p['slug'] == '404' else relpaths(page))
     with open(os.path.join(out, 'style.css'), 'w') as f:
         f.write((CSS % s).strip() + '\n' + s.get('css', ''))
     if s.get('js'):
