@@ -105,6 +105,49 @@ footer.foot h4{color:#fff;margin:0 0 8px;font-size:15px}
 footer.foot ul{list-style:none;padding:0;margin:0}footer.foot li{margin:5px 0}
 footer.foot .legal{border-top:1px solid #263544;margin-top:22px;padding-top:14px;font-size:13px;color:#8fa0b0}
 .sr{position:absolute;left:-9999px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin:18px 0}
+.pc{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.pc .im{background:linear-gradient(160deg,#eef3f7,#dfe7ee);aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;position:relative}
+.pc .im svg{width:78%%;height:auto}
+.pc .rib{position:absolute;top:12px;left:12px;background:var(--ac);color:#14202b;font-size:12.5px;font-weight:800;padding:4px 10px;border-radius:99px}
+.pc .bd{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.pc h3{margin:0;font-size:21px;letter-spacing:-.3px}.pc h3 a{color:var(--ink);text-decoration:none}
+.pc .tl{margin:0;color:var(--mut);font-size:15.5px}
+.pc ul.ks{list-style:none;padding:0;margin:4px 0;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pc ul.ks li{background:var(--bg);border-radius:10px;padding:7px 9px;font-size:13.5px;color:var(--mut);line-height:1.3}
+.pc ul.ks b{display:block;color:var(--ink);font-size:16px}
+.pc .pr{font-size:20px;font-weight:800;color:var(--c1);margin-top:auto}.pgrid:has(>.pc:only-child){grid-template-columns:1fr}.pc .pr small{display:block;font-size:12.5px;color:var(--mut);font-weight:600}
+.pc .act{display:flex;gap:8px;flex-wrap:wrap}.pc .act .btn{flex:1;text-align:center;padding:11px 12px;font-size:15px}
+.btn.ghost{background:#fff;color:var(--c1);border:1.5px solid var(--c1)}
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:-40px;position:relative}
+@media(max-width:620px){.picks{grid-template-columns:1fr 1fr;gap:8px}.picks a{padding:10px 12px}.picks a b{font-size:15px}.picks a span{font-size:11px}}
+.picks a{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-decoration:none;color:var(--ink);box-shadow:0 8px 24px rgba(20,32,43,.07)}
+.picks a span{display:block;font-size:13px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px}
+.picks a b{font-size:18px;color:var(--c1)}
+.cmp{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px clamp(12px,2.5vw,26px)}
+.cmp .cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,2vw,22px)}
+.cmp select{font-weight:700;font-size:15px;padding:9px 10px}@media(max-width:520px){.cmp select{font-size:13px;padding:8px 4px}}
+.cmp .ch{text-align:center;padding:12px 4px 6px}
+.cmp .ch svg{width:100%%;max-width:170px;height:auto}
+.cmp .ch .pr{font-weight:800;color:var(--c1);margin:4px 0 8px}
+.cmp .ch .btn{padding:9px 12px;font-size:14px}
+.cmp .row{border-top:1px solid var(--line);padding:12px 0 10px}
+.cmp .row h4{margin:0 0 8px;text-align:center;font-size:13px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.cmp .row .cols3 div{text-align:center;font-size:clamp(14px,2.2vw,19px);font-weight:700;line-height:1.3}
+.cmp .row .cols3 div small{display:block;font-size:12.5px;color:var(--mut);font-weight:600}
+.cmp .row .cols3 div.win{color:var(--c1)}
+.cmp .row .cols3 div.win:after{content:"▲ cel mai bun";display:block;font-size:11px;color:var(--c2);font-weight:800;letter-spacing:.3px}
+.phero{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:-30px;position:relative}
+@media(max-width:820px){.phero{grid-template-columns:1fr}}
+.phero .im{background:linear-gradient(160deg,#eef3f7,#dfe7ee);border-radius:14px;display:flex;align-items:center;justify-content:center;min-height:220px}
+.phero .im svg{width:82%%}
+.phero h2{margin:0 0 6px;font-size:24px}
+.phero .pr{font-size:26px;font-weight:800;color:var(--c1);margin:10px 0 2px}
+.pros{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}@media(max-width:620px){.pros{grid-template-columns:1fr}}
+.pros div{border-radius:12px;padding:12px 16px}.pros .p{background:#eef7ea}.pros .c{background:#fbefee}
+.pros h3{margin:0 0 6px;font-size:16px}.pros ul{margin:0;padding-left:20px}.pros li{font-size:15.5px;margin:3px 0}
+.disc{font-size:13px;color:var(--mut);margin-top:6px}
+.split{display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:24px;align-items:center}@media(max-width:720px){.split{grid-template-columns:1fr}}
 """
 
 NAV_JS = "document.addEventListener('click',function(e){var b=e.target.closest('.burger');if(b){document.querySelector('nav.main').classList.toggle('open')}});"
@@ -183,8 +226,12 @@ def head(s, p):
                     "inLanguage": "ro-RO", "datePublished": p.get('date', UPDATED), "dateModified": UPDATED,
                     "mainEntityOfPage": canon, "author": {"@type": "Organization", "name": s['name']},
                     "publisher": {"@type": "Organization", "name": s['name']}})
+    if p.get('kind') == 'product':
+        lds.append(product_ld(s, p['prod']))
     if p.get('faq'):
         lds.append(faq_ld(p['faq']))
+    elif p.get('kind') == 'product' and p['prod'].get('faq'):
+        lds.append(faq_ld(p['prod']['faq']))
     noindex = '<meta name="robots" content="noindex">' if p['slug'] == '404' else ''
     return """<!doctype html>
 <html lang="ro">
@@ -202,11 +249,11 @@ def head(s, p):
 <meta property="og:locale" content="ro_RO">
 <meta name="theme-color" content="%(c1)s">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/style.css?v=1">
+<link rel="stylesheet" href="/style.css?v=2">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=%(pub)s" crossorigin="anonymous"></script>
 %(ld)s
 </head>""" % dict(title=esc(title), desc=esc(desc), canon=canon, name=esc(s['name']), c1=s['c1'], pub=PUB,
-                    ogt='article' if p.get('kind') == 'article' else 'website', noindex=noindex,
+                    ogt='article' if p.get('kind') in ('article', 'product') else 'website', noindex=noindex,
                     ld='\n'.join(ldjson(x) for x in lds))
 
 
@@ -226,9 +273,13 @@ def header(s, p):
 def footer(s):
     arts = [p for p in s['pages'] if p.get('kind') == 'article'][:5]
     tools = [p for p in s['pages'] if p.get('kind') == 'tool' or p['slug'] == 'index']
+    col1 = 'Calculatoare'
+    if s.get('products'):
+        col1 = s.get('models_label', 'Modele')
+        tools = [{'slug': x['slug'], 'short': x['name']} for x in s['products'][:6]]
     return """<footer class="foot"><div class="wrap"><div class="fg">
 <div><a class="logo" href="/" style="color:#fff">%s<span>%s</span></a><p>%s</p><p class="note" style="color:#8fa0b0">Informațiile au caracter general și nu înlocuiesc sfatul unui specialist. Verificăm cifrele cu sursele oficiale; dacă vezi o greșeală, <a href="/contact.html">scrie-ne</a>.</p></div>
-<div><h4>Calculatoare</h4><ul>%s</ul></div>
+<div><h4>%s</h4><ul>%s</ul></div>
 <div><h4>Ghiduri</h4><ul>%s<li><a href="/ghiduri.html">Toate ghidurile →</a></li></ul></div>
 </div>
 <div class="legal">© 2026 %s · Actualizat: %s · <a href="/despre.html">Despre</a> · <a href="/contact.html">Contact</a> · <a href="/politica-confidentialitate.html">Confidențialitate</a></div>
@@ -237,27 +288,157 @@ def footer(s):
 %s
 </body>
 </html>""" % (logo_svg(s), esc(s['name']), s['tagline'],
-              ''.join('<li><a href="%s">%s</a></li>' % ('/' if t['slug'] == 'index' else '/' + t['slug'] + '.html', t.get('short', t['h1'])) for t in tools),
+              col1, ''.join('<li><a href="%s">%s</a></li>' % ('/' if t['slug'] == 'index' else '/' + t['slug'] + '.html', t.get('short') or t['h1']) for t in tools),
               ''.join('<li><a href="/%s.html">%s</a></li>' % (a['slug'], a.get('short', a['h1'])) for a in arts),
               esc(s['name']), UPDATED_RO, NAV_JS,
-              '<script src="/app.js?v=1" defer></script>' if s.get('js') else '')
+              '<script src="/app.js?v=2" defer></script>' if s.get('js') else '')
 
 
 def side(s, p):
-    others = [x for x in s['pages'] if x.get('kind') in ('article', 'tool') and x['slug'] not in (p['slug'], 'index')][:7]
-    return """<aside class="side"><div class="card"><h3>%s</h3><p class="note" style="margin:0 0 10px">%s</p><a class="btn" href="/">Deschide calculatorul</a></div>
+    others = [x for x in s['pages'] if x.get('kind') in ('article', 'tool', 'product') and x['slug'] not in (p['slug'], 'index')][:7]
+    return """<aside class="side"><div class="card"><h3>%s</h3><p class="note" style="margin:0 0 10px">%s</p><a class="btn" href="%s">%s</a></div>
 <div class="card"><h3>Citește și</h3><ul>%s</ul></div></aside>""" % (
-        s['side_title'], s['side_text'],
+        s['side_title'], s['side_text'], s.get('side_href', '/'), s.get('side_btn', 'Deschide calculatorul'),
         ''.join('<li><a href="/%s.html">%s</a></li>' % (x['slug'], x.get('short', x['h1'])) for x in others))
 
 
+REL = 'sponsored nofollow noopener'
+
+
+def prod_url(x):
+    return '/%s.html' % x['slug']
+
+
+def prod_art(s, x):
+    return x.get('art') or s.get('art_default', '')
+
+
+def price_html(x):
+    return '%s<small>%s</small>' % (x['price'], x.get('price_note', 'preț orientativ'))
+
+
+def buy_btn(x, cls='btn alt'):
+    return '<a class="%s" href="%s" rel="%s" target="_blank">%s</a>' % (cls, esc(x['link']), REL, x.get('link_label', 'Vezi prețul'))
+
+
+def prod_card(s, x):
+    ks = ''.join('<li><b>%s</b>%s</li>' % (v, k) for k, v in x['keys'][:4])
+    rib = '<span class="rib">%s</span>' % x['ribbon'] if x.get('ribbon') else ''
+    return """<div class="pc"><a class="im" href="%(u)s" aria-label="%(n)s">%(rib)s%(art)s</a><div class="bd">
+<h3><a href="%(u)s">%(n)s</a></h3><p class="tl">%(tl)s</p><ul class="ks">%(ks)s</ul>
+<div class="pr">%(pr)s<small>%(cn)s</small></div><div class="act"><a class="btn ghost" href="%(u)s">Detalii</a>%(buy)s</div></div></div>""" % dict(
+        u=prod_url(x), n=esc(x['name']), rib=rib, art=prod_art(s, x), tl=x['tagline'], ks=ks, pr=x['price'], cn=x.get('card_note', 'preț orientativ · confirmă la dealer'), buy=buy_btn(x))
+
+
+def prod_grid(s, items=None):
+    return '<div class="pgrid">%s</div>' % ''.join(prod_card(s, x) for x in (items or s['products']))
+
+
+def compare_html(s, title='Compară modelele'):
+    """Comparador estilo Apple: 3 columnas con selector; el mejor valor de cada fila se resalta."""
+    ps = [x for x in s['products'] if x.get('compare', True)]
+    pre = s.get('compare_default', [x['slug'] for x in ps[:3]])
+    rows = s['compare_rows']
+    def col(slot, x):
+        opts = ''.join('<option value="%s"%s>%s</option>' % (y['slug'], ' selected' if y['slug'] == x['slug'] else '', esc(y.get('cmp_label', y['name']))) for y in ps)
+        return '<div><select aria-label="Model %d" data-slot="%d">%s</select><div class="ch" data-h="%d">%s</div></div>' % (slot + 1, slot, opts, slot, cmp_head(s, x))
+    sel = [next(y for y in ps if y['slug'] == sl) for sl in pre]
+    head_ = '<div class="cols3">%s</div>' % ''.join(col(i, x) for i, x in enumerate(sel))
+    body = ''
+    for ri, r in enumerate(rows):
+        cells = cmp_cells(r, sel)
+        body += '<div class="row"><h4>%s</h4><div class="cols3" data-r="%d">%s</div></div>' % (r[0], ri, cells)
+    data = {y['slug']: {'h': cmp_head(s, y), 'v': [y['spec'].get(r[1]) for r in rows]} for y in ps}
+    js_rows = [r[2] if len(r) > 2 else None for r in rows]
+    return """<section class="sec" id="compara"><h2>%s</h2><p class="note">Alege oricare trei modele. Valoarea cea mai bună pe fiecare rând este evidențiată.</p>
+<div class="cmp" id="cmp">%s%s</div>
+<script type="application/json" id="cmpdata">%s</script></section>""" % (
+        title, head_, body, json.dumps({'p': data, 'r': js_rows}, ensure_ascii=False).replace('</', '<\\/'))
+
+
+def cmp_head(s, x):
+    return '%s<div class="pr">%s</div><a class="btn ghost" href="%s">Detalii</a>' % (prod_art(s, x), x['price'], prod_url(x))
+
+
+def cmp_cells(r, sel):
+    vals = [x['spec'].get(r[1]) for x in sel]
+    best = None
+    mode = r[2] if len(r) > 2 else None
+    nums = [v[0] for v in vals if isinstance(v, list) and isinstance(v[0], (int, float))]
+    if mode and len(nums) > 1 and len(set(nums)) > 1:
+        best = max(nums) if mode == 'max' else min(nums)
+    out = ''
+    for v in vals:
+        if v is None:
+            out += '<div>—</div>'
+        elif isinstance(v, list):
+            win = ' class="win"' if best is not None and v[0] == best else ''
+            out += '<div%s>%s%s</div>' % (win, v[1], '<small>%s</small>' % v[2] if len(v) > 2 else '')
+        else:
+            out += '<div>%s</div>' % v
+    return out
+
+
+CMP_JS = r"""
+(function(){var c=document.getElementById('cmp');if(!c)return;var D=JSON.parse(document.getElementById('cmpdata').textContent);
+function cell(v){if(v==null)return['—',null];if(Array.isArray(v))return[v[1]+(v[2]?'<small>'+v[2]+'</small>':''),typeof v[0]==='number'?v[0]:null];return[v,null]}
+function draw(){var ss=[].map.call(c.querySelectorAll('select'),function(s){return s.value});
+ss.forEach(function(sl,i){c.querySelector('[data-h="'+i+'"]').innerHTML=D.p[sl].h});
+D.r.forEach(function(mode,ri){var cs=ss.map(function(sl){return cell(D.p[sl].v[ri])});var nums=cs.map(function(x){return x[1]}).filter(function(n){return n!=null});
+var best=null;if(mode&&nums.length>1&&Math.max.apply(0,nums)!==Math.min.apply(0,nums))best=mode==='max'?Math.max.apply(0,nums):Math.min.apply(0,nums);
+c.querySelector('[data-r="'+ri+'"]').innerHTML=cs.map(function(x){return'<div'+(best!=null&&x[1]===best?' class="win"':'')+'>'+x[0]+'</div>'}).join('')})}
+c.addEventListener('change',draw)})();
+"""
+
+
+def product_page(s, x):
+    spec_rows = ''.join('<tr><th>%s</th><td>%s</td></tr>' % (k, v) for k, v in x['specs'])
+    others = [y for y in s['products'] if y['slug'] != x['slug']][:3]
+    body = """<div class="phero"><div class="im">%(art)s</div><div><h2>%(n)s</h2><p>%(tl)s</p>
+<p><b>Ideal pentru:</b> %(bf)s</p><div class="pr">%(pr)s</div><p class="disc">%(pn)s</p>
+<p>%(buy)s</p><p class="disc">Linkul duce la %(store)s. %(aff)s</p></div></div>
+<main class="content"><div class="cols" style="padding:0"><article class="prose"><div class="meta">Actualizat: %(upd)s</div>%(desc)s
+<div class="pros"><div class="p"><h3>Ce ne place</h3><ul>%(pros)s</ul></div><div class="c"><h3>De ținut cont</h3><ul>%(cons)s</ul></div></div>
+<h2>Specificații principale</h2><div class="tw"><table class="t">%(spec)s</table></div><p class="note">%(src)s</p>
+<p>%(buy)s <a class="btn ghost" href="/#compara">Compară cu alte modele</a></p>%(faq)s</article>%(side)s</div>
+<section class="sec"><h2>Alternative</h2>%(alt)s</section></main>""" % dict(
+        art=prod_art(s, x), n=esc(x['name']), tl=x['tagline'], bf=x['best_for'], pr=x['price'],
+        pn=x.get('price_note', 'Preț orientativ; verifică oferta actuală la dealer.'), buy=buy_btn(x), store=x.get('store', 'magazin'),
+        aff=s.get('aff_short', ''), upd=UPDATED_RO, desc=x['desc'],
+        pros=''.join('<li>%s</li>' % i for i in x['pros']), cons=''.join('<li>%s</li>' % i for i in x['cons']),
+        spec=spec_rows, src=x.get('src', ''), faq=faq_html(x.get('faq')), side=side(s, x), alt=prod_grid(s, others))
+    return body
+
+
+def product_ld(s, x):
+    d = {"@context": "https://schema.org", "@type": "Product", "name": x['name'], "brand": {"@type": "Brand", "name": x['brand']},
+         "description": strip_tags(x['tagline']), "url": url(s, x['slug'])}
+    if x.get('price_eur'):
+        d["offers"] = {"@type": "Offer", "priceCurrency": "EUR", "price": str(x['price_eur']), "availability": "https://schema.org/InStock", "url": x['link']}
+    return d
+
+
+def fill(s, body):
+    if s.get('products'):
+        main = [x for x in s['products'] if x.get('compare', True)]
+        rest = [x for x in s['products'] if not x.get('compare', True)]
+        body = body.replace('{{PRODUCTS}}', prod_grid(s, main)).replace('{{COMPARE}}', compare_html(s))
+        body = body.replace('{{EXTRA_PRODUCTS}}', prod_grid(s, rest) if rest else '')
+    return body
+
+
 def render(s, p):
+    if p.get('body'):
+        p = dict(p, body=fill(s, p['body']))
     h = head(s, p) + header(s, p)
     kind = p.get('kind', 'page')
     if p['slug'] == 'index':
         h += """<section class="hero"><div class="wrap"><h1>%s</h1><p>%s</p><div class="badges">%s</div></div></section>
 <main><div class="wrap">%s%s</div></main>""" % (p['h1'], p['lead'], ''.join('<span>%s</span>' % b for b in s['badges']),
                                                  p['body'], faq_html(p.get('faq')))
+    elif kind == 'product':
+        h += """<section class="pagehead" style="padding-bottom:48px"><div class="wrap"><div class="crumbs"><a href="/">%s</a> › <a href="/#modele">Modele</a></div><h1>%s</h1><p>%s</p></div></section>
+<div class="wrap">%s</div>""" % (esc(s['name']), p['h1'], p['lead'], product_page(s, p['prod']))
     elif kind == 'tool':
         h += """<section class="pagehead" style="padding-bottom:58px"><div class="wrap"><div class="crumbs"><a href="/">%s</a> › %s</div><h1>%s</h1><p>%s</p></div></section>
 <main><div class="wrap">%s%s</div></main>""" % (esc(s['name']), p.get('crumb', p['h1']), p['h1'], p['lead'], p['body'], faq_html(p.get('faq')))
@@ -280,7 +461,10 @@ def std_pages(s):
     hub = {'slug': 'ghiduri', 'title': 'Ghiduri și calculatoare | %s' % s['name'], 'h1': 'Ghiduri și calculatoare',
            'desc': 'Toate ghidurile %s: explicații clare, exemple de calcul și calculatoare gratuite.' % s['name'],
            'lead': s['tagline'], 'crumb': 'Ghiduri',
-           'body': '<h2>Calculatoare</h2><div class="cards"><a class="c" href="/"><span class="tag">Calculator</span><b>%s</b><span>Calculatorul principal %s.</span></a>%s</div><h2>Ghiduri</h2><div class="cards">%s</div>' % (
+           'body': ('<h2>%s</h2><div class="cards">%s</div><h2>Calculatoare</h2><div class="cards">%s</div><h2>Ghiduri</h2><div class="cards">%s</div>' % (
+               s.get('models_label', 'Modele'), ''.join('<a class="c" href="/%s.html"><span class="tag">Model</span><b>%s</b><span>%s</span></a>' % (x['slug'], esc(x['name']), strip_tags(x['tagline'])) for x in s['products']),
+               cards(tools, 'Calculator'), cards(arts, 'Ghid'))) if s.get('products') else
+               '<h2>Calculatoare</h2><div class="cards"><a class="c" href="/"><span class="tag">Calculator</span><b>%s</b><span>Calculatorul principal %s.</span></a>%s</div><h2>Ghiduri</h2><div class="cards">%s</div>' % (
                s['main_tool'], s['name'], cards(tools, 'Calculator'), cards(arts, 'Ghid'))}
     despre = {'slug': 'despre', 'title': 'Despre %s' % s['name'], 'h1': 'Despre %s' % s['name'], 'crumb': 'Despre',
               'desc': 'Cine suntem, cum lucrăm și de unde luăm cifrele folosite în calculatoarele %s.' % s['name'],
@@ -308,7 +492,7 @@ def std_pages(s):
 <h2>Drepturile tale</h2><p>Conform GDPR ai dreptul de acces, rectificare, ștergere, restricționare și opoziție, precum și dreptul de a depune plângere la ANSPDCP (dataprotection.ro). Pentru orice solicitare, folosește <a href="/contact.html">pagina de contact</a>.</p>""" % {'n': esc(s['name'])}}
     nf = {'slug': '404', 'title': 'Pagina nu există | %s' % s['name'], 'h1': 'Pagina nu a fost găsită', 'crumb': '404',
           'desc': 'Pagina căutată nu există.', 'lead': 'Poate a fost mutată. Încearcă de aici:',
-          'body': '<p><a class="btn" href="/">Mergi la calculator</a> <a class="btn alt" href="/ghiduri.html">Vezi ghidurile</a></p>'}
+          'body': '<p><a class="btn" href="/">Pagina principală</a> <a class="btn alt" href="/ghiduri.html">Vezi ghidurile</a></p>'}
     return [hub, despre, contact, priv, nf]
 
 
@@ -327,6 +511,11 @@ def build(sid):
     if os.path.exists(out):
         shutil.rmtree(out)
     os.makedirs(out)
+    if s.get('products'):
+        for x in s['products']:
+            s['pages'].append({'slug': x['slug'], 'kind': 'product', 'prod': x, 'title': x['title'], 'desc': x['meta'],
+                               'h1': x.get('h1', x['name']), 'lead': x.get('lead', x['tagline']), 'short': x['name'], 'crumb': x['name']})
+        s['js'] = (s.get('js') or '') + CMP_JS
     pages = s['pages'] + std_pages(s)
     s_all = dict(s)
     for p in pages:
@@ -348,7 +537,7 @@ def build(sid):
     for p in pages:
         if p['slug'] == '404':
             continue
-        pr = '1.0' if p['slug'] == 'index' else ('0.9' if p.get('kind') == 'tool' else ('0.8' if p.get('kind') == 'article' else '0.4'))
+        pr = '1.0' if p['slug'] == 'index' else ('0.9' if p.get('kind') in ('tool', 'product') else ('0.8' if p.get('kind') == 'article' else '0.4'))
         sm.append('<url><loc>%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>' % (url(s, p['slug']), UPDATED, pr))
     sm.append('</urlset>')
     with open(os.path.join(out, 'sitemap.xml'), 'w') as f:
