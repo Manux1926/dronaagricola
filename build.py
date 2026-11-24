@@ -327,7 +327,7 @@ def prod_card(s, x):
     return """<div class="pc"><a class="im" href="%(u)s" aria-label="%(n)s">%(rib)s%(art)s</a><div class="bd">
 <h3><a href="%(u)s">%(n)s</a></h3><p class="tl">%(tl)s</p><ul class="ks">%(ks)s</ul>
 <div class="pr">%(pr)s<small>%(cn)s</small></div><div class="act"><a class="btn ghost" href="%(u)s">Detalii</a>%(buy)s</div></div></div>""" % dict(
-        u=prod_url(x), n=esc(x['name']), rib=rib, art=prod_art(s, x), tl=x['tagline'], ks=ks, pr=x['price'], cn=x.get('card_note', 'preț orientativ · confirmă la dealer'), buy=buy_btn(x))
+        u=prod_url(x), n=esc(x['name']), rib=rib, art=prod_art(s, x), tl=x['tagline'], ks=ks, pr=x['price'], cn=x.get('card_note', s.get('card_note', 'preț orientativ · confirmă la dealer')), buy=buy_btn(x))
 
 
 def prod_grid(s, items=None):
@@ -416,6 +416,84 @@ def product_ld(s, x):
     if x.get('price_eur'):
         d["offers"] = {"@type": "Offer", "priceCurrency": "EUR", "price": str(x['price_eur']), "availability": "https://schema.org/InStock", "url": x['link']}
     return d
+
+
+def emag(q):
+    """Link de búsqueda en eMAG (se puede envolver luego con Profitshare)."""
+    from urllib.parse import quote
+    return 'https://www.emag.ro/search/' + quote(q)
+
+
+def art(kind, label='', c='#2b3440', c2='#7fb85a'):
+    """Ilustraciones genéricas (no son fotos de producto)."""
+    sh = {
+        'mower': '<rect x="70" y="80" width="180" height="72" rx="34" fill="%(c)s"/><rect x="96" y="66" width="128" height="40" rx="20" fill="%(c)s"/><circle cx="160" cy="70" r="12" fill="#e9eef2"/><circle cx="160" cy="70" r="5" fill="%(c2)s"/><circle cx="96" cy="154" r="18" fill="#1c2430"/><circle cx="224" cy="154" r="18" fill="#1c2430"/><circle cx="96" cy="154" r="7" fill="#9aa5b1"/><circle cx="224" cy="154" r="7" fill="#9aa5b1"/><rect x="120" y="112" width="80" height="8" rx="4" fill="%(c2)s"/>',
+        'gas': '<rect x="70" y="58" width="180" height="70" rx="14" fill="%(c)s"/><path d="M70 92h180" stroke="#e9eef2" stroke-width="3"/><rect x="128" y="70" width="64" height="8" rx="4" fill="#9aa5b1"/><rect x="30" y="100" width="40" height="8" rx="3" fill="#9aa5b1"/><rect x="250" y="100" width="40" height="8" rx="3" fill="#9aa5b1"/><rect x="84" y="128" width="152" height="40" rx="6" fill="#3a4550"/><circle cx="110" cy="148" r="5" fill="%(c2)s"/><circle cx="160" cy="148" r="5" fill="%(c2)s"/><circle cx="210" cy="148" r="5" fill="%(c2)s"/><rect x="88" y="168" width="8" height="16" fill="#1c2430"/><rect x="224" y="168" width="8" height="16" fill="#1c2430"/>',
+        'kettle': '<path d="M90 92a70 62 0 0 1 140 0z" fill="%(c)s"/><rect x="152" y="24" width="16" height="8" rx="4" fill="#9aa5b1"/><rect x="84" y="92" width="152" height="10" rx="4" fill="#9aa5b1"/><path d="M92 104a68 40 0 0 0 136 0z" fill="%(c)s"/><path d="M118 140l-18 44M202 140l18 44M160 144v40" stroke="#3a4550" stroke-width="6" stroke-linecap="round"/><path d="M130 84q8-12 0-24M160 84q8-12 0-24M190 84q8-12 0-24" stroke="%(c2)s" stroke-width="4" fill="none" stroke-linecap="round"/>',
+        'station': '<rect x="80" y="50" width="160" height="130" rx="18" fill="%(c)s"/><rect x="118" y="34" width="84" height="22" rx="10" fill="none" stroke="%(c)s" stroke-width="8"/><rect x="100" y="70" width="70" height="40" rx="6" fill="#1c2430"/><rect x="108" y="80" width="%(w)d" height="20" rx="3" fill="%(c2)s"/><circle cx="198" cy="90" r="14" fill="#e9eef2"/><circle cx="193" cy="90" r="3" fill="%(c)s"/><circle cx="203" cy="90" r="3" fill="%(c)s"/><rect x="100" y="132" width="20" height="12" rx="3" fill="#e9eef2"/><rect x="128" y="132" width="20" height="12" rx="3" fill="#e9eef2"/><rect x="156" y="132" width="20" height="12" rx="3" fill="#e9eef2"/>',
+        'panel': '<g transform="skewX(-12) translate(40 0)"><rect x="60" y="40" width="200" height="120" rx="6" fill="#1f3b63"/><path d="M110 40v120M160 40v120M210 40v120M60 80h200M60 120h200" stroke="#7fa7d9" stroke-width="2"/></g><rect x="140" y="160" width="10" height="28" fill="#9aa5b1"/><circle cx="250" cy="40" r="18" fill="#f1c232"/>',
+        'drill': '<rect x="70" y="62" width="130" height="50" rx="16" fill="%(c)s"/><rect x="200" y="78" width="30" height="18" rx="4" fill="#3a4550"/><rect x="230" y="84" width="46" height="6" rx="3" fill="#9aa5b1"/><path d="M112 110l-12 52h46l8-52z" fill="%(c)s"/><rect x="86" y="160" width="84" height="28" rx="6" fill="#1c2430"/><rect x="96" y="168" width="22" height="6" rx="3" fill="%(c2)s"/><rect x="90" y="74" width="40" height="8" rx="4" fill="#e9eef2" opacity=".6"/>',
+        'controller': '<rect x="96" y="40" width="128" height="140" rx="20" fill="%(c)s"/><rect x="114" y="58" width="92" height="40" rx="6" fill="#1c2430"/><rect x="124" y="70" width="50" height="16" rx="3" fill="%(c2)s"/><circle cx="160" cy="138" r="24" fill="#e9eef2"/><circle cx="160" cy="138" r="8" fill="%(c)s"/><path d="M252 70c-10 16-10 26 0 30 10-4 10-14 0-30zM270 110c-8 12-8 20 0 23 8-3 8-11 0-23zM56 96c-8 12-8 20 0 23 8-3 8-11 0-23z" fill="#4aa3df"/>',
+        'hive': '<path d="M70 70l90-34 90 34z" fill="#8a5a2b"/><rect x="80" y="70" width="160" height="40" rx="3" fill="#e8b04a"/><rect x="80" y="112" width="160" height="56" rx="3" fill="#d79a2c"/><rect x="140" y="156" width="40" height="8" rx="3" fill="#3a2a14"/><rect x="74" y="168" width="172" height="10" rx="3" fill="#6b4a24"/><circle cx="262" cy="60" r="7" fill="#f1c232"/><circle cx="48" cy="96" r="6" fill="#f1c232"/>',
+        'tool': '<rect x="70" y="80" width="180" height="70" rx="12" fill="%(c)s"/><rect x="130" y="60" width="60" height="26" rx="10" fill="none" stroke="%(c)s" stroke-width="8"/><rect x="86" y="96" width="148" height="10" rx="5" fill="#e9eef2" opacity=".5"/><circle cx="110" cy="128" r="8" fill="%(c2)s"/><circle cx="210" cy="128" r="8" fill="%(c2)s"/>',
+        'mattress': '<path d="M50 110l60-40h170l-60 40z" fill="#e9eef2"/><path d="M50 110h170v40H50z" fill="%(c)s"/><path d="M220 110l60-40v40l-60 40z" fill="%(c)s" opacity=".8"/><path d="M50 124h170M50 136h170" stroke="%(c2)s" stroke-width="3"/><rect x="70" y="80" width="60" height="22" rx="10" fill="#fff"/>',
+    }[kind]
+    w = 54
+    if label.endswith('Wh'):
+        try:
+            w = max(10, min(54, int(int(label.split()[0].replace('.', '')) / 3072 * 54)))
+        except ValueError:
+            pass
+    body = sh % {'c': c, 'c2': c2, 'w': w}
+    lab = ('<rect x="%d" y="186" width="%d" height="20" rx="10" fill="#14202b" opacity=".75"/><text x="160" y="200" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="800" font-size="13" fill="#fff">%s</text>' % (160 - (len(label) * 4 + 12), len(label) * 8 + 24, esc(label))) if label else ''
+    return '<svg viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustrație %s">%s%s</svg>' % (esc(label or kind), body, lab)
+
+
+def std_home(s, c, arts):
+    """Portada estándar del blog de productos."""
+    picks = ''.join('<a href="/%s.html"><span>%s</span><b>%s →</b></a>' % (sl, lab, nm) for sl, lab, nm in c['picks'])
+    how = ''.join('<div class="box info" style="margin:0"><b>%d. %s</b><p class="note" style="margin:6px 0 0">%s</p></div>' % (i + 1, q, a) for i, (q, a) in enumerate(c['how']))
+    extra = ''
+    if any(not x.get('compare', True) for x in c['products']):
+        extra = '<section class="sec"><h2>%s</h2><div class="split"><div>{{EXTRA_PRODUCTS}}</div><div>%s</div></div></section>' % (c['extra_h2'], c['extra_text'])
+    guides = ''.join('<a class="c" href="/%s.html"><span class="tag">Ghid</span><b>%s</b><span>%s</span></a>' % (a['slug'], a.get('short', a['h1']), a['desc']) for a in arts)
+    return """<div class="picks">%s</div>
+<section class="sec" id="modele"><h2>%s</h2><p>%s</p>
+{{PRODUCTS}}</section>
+{{COMPARE}}
+%s
+<section class="sec"><h2>Cum alegi în 3 întrebări</h2><div class="grid3">%s</div></section>
+<section class="sec"><div class="box"><b>%s</b> %s</div>%s</section>
+<section class="sec"><h2>Ghiduri</h2><div class="cards">%s</div>
+<p class="disc">Ilustrațiile sunt schematice, nu fotografii ale produselor. Prețurile sunt orientative, văzute la data actualizării, și se pot schimba; verifică prețul final în magazin. Unele linkuri pot fi de afiliere: dacă cumperi prin ele putem primi un comision, fără cost în plus pentru tine.</p></section>""" % (
+        picks, c['h2'], c['intro'], extra, how, c['calc_box'][0], c['calc_box'][1], c.get('after_calc', ''), guides)
+
+
+def productize(s, c):
+    """Convierte una web 'calculadora primero' en blog de productos: la calculadora pasa a /<calc_slug>.html."""
+    pages = s['pages']
+    idx = next(p for p in pages if p['slug'] == 'index')
+    calc = dict(idx)
+    calc.update(slug=c['calc_slug'], title=c['calc_title'], kind='tool', crumb=c.get('calc_crumb', 'Calculator'), faq=None)
+    s.setdefault('card_note', 'preț orientativ · verifică în magazin')
+    if c.get('calc_desc'):
+        calc['desc'] = c['calc_desc']
+    home = {'slug': 'index', 'kind': 'home', 'title': c['title'], 'desc': c['desc'], 'h1': c['h1'], 'lead': c['lead'],
+            'short': c.get('home_short', 'Modele și comparație'), 'body': c.get('home') or std_home(s, c, [p for p in pages if p.get('kind') == 'article']),
+            'faq': c.get('faq', idx.get('faq'))}
+    target = '/%s.html' % c['calc_slug']
+    rest = []
+    for p in pages:
+        if p['slug'] == 'index':
+            continue
+        q = dict(p)
+        q['body'] = q['body'].replace('href="/"', 'href="%s"' % target).replace('href="/#', 'href="%s#' % target)
+        rest.append(q)
+    s['pages'] = [home, calc] + rest
+    for k in ('nav', 'badges', 'products', 'compare_rows', 'compare_default', 'aff_short', 'side_title', 'side_text',
+              'side_href', 'side_btn', 'tagline', 'models_label', 'card_note'):
+        if k in c:
+            s[k] = c[k]
 
 
 def fill(s, body):
@@ -507,6 +585,8 @@ def build(sid):
     mod = importlib.import_module('site_' + sid)
     s = mod.SITE
     s['id'] = sid
+    if os.path.exists(os.path.join(ROOT, 'site_%s_p.py' % sid)):
+        productize(s, importlib.import_module('site_%s_p' % sid).CFG)
     out = os.path.join(OUT, sid)
     if os.path.exists(out):
         shutil.rmtree(out)
