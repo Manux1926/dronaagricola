@@ -7,6 +7,7 @@ OUT = os.path.join(ROOT, '..', 'out')
 PUB = 'ca-pub-3913582839475889'
 UPDATED = '2026-11-24'
 UPDATED_RO = '24 noiembrie 2026'
+PRICE_VALID = '2026-12-31'  # actualizar junto con los precios
 FORMSPREE = 'https://formspree.io/f/mjywywjw'
 
 SITES = ['dronaagricola', 'robotgazon', 'gratarexpert', 'energiemobila',
@@ -169,6 +170,11 @@ def url(s, slug):
     return 'https://%s/%s' % (s['domain'], '' if slug == 'index' else slug + '.html')
 
 
+def asset(s, name):
+    """URL absoluta de una imagen copiada desde la raíz del repo (og-image.jpg, logo.png), o None."""
+    return 'https://%s/%s' % (s['domain'], name) if name in s.get('assets', ()) else None
+
+
 def ldjson(obj):
     return '<script type="application/ld+json">%s</script>' % json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
 
@@ -214,7 +220,11 @@ def head(s, p):
         lds.append({"@context": "https://schema.org", "@type": "WebSite", "name": s['name'], "url": url(s, 'index'),
                     "inLanguage": "ro-RO", "description": s['tagline']})
         lds.append({"@context": "https://schema.org", "@type": "Organization", "name": s['name'], "url": url(s, 'index'),
-                    "logo": url(s, 'favicon.svg').replace('favicon.svg.html', 'favicon.svg')})
+                    "logo": asset(s, 'logo.png') or 'https://%s/favicon.svg' % s['domain']})
+        if s.get('products'):
+            lds.append({"@context": "https://schema.org", "@type": "ItemList", "name": p['h1'][:110],
+                        "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": url(s, x['slug']), "name": x['name']}
+                                            for i, x in enumerate(s['products'])]})
     else:
         lds.append(crumbs_ld(s, p))
     if p.get('kind') == 'tool' or p.get('tool'):
@@ -224,10 +234,13 @@ def head(s, p):
     if p.get('kind') == 'article':
         lds.append({"@context": "https://schema.org", "@type": "Article", "headline": p['h1'][:110], "description": desc,
                     "inLanguage": "ro-RO", "datePublished": p.get('date', UPDATED), "dateModified": UPDATED,
-                    "mainEntityOfPage": canon, "author": {"@type": "Organization", "name": s['name']},
-                    "publisher": {"@type": "Organization", "name": s['name']}})
-    if p.get('kind') == 'product':
-        lds.append(product_ld(s, p['prod']))
+                    "mainEntityOfPage": canon, "author": {"@type": "Organization", "name": s['name'], "url": url(s, 'despre')},
+                    "publisher": {"@type": "Organization", "name": s['name'], "url": url(s, 'index'),
+                                  "logo": {"@type": "ImageObject", "url": asset(s, 'logo.png') or 'https://%s/favicon.svg' % s['domain']}}})
+        if asset(s, 'og-image.jpg'):
+            lds[-1]["image"] = asset(s, 'og-image.jpg')
+    if p.get('kind') == 'product' and product_ld(s, p['prod']).get('offers'):
+        lds.append(product_ld(s, p['prod']))  # sin precio no hay Product: Google lo marcaría como inválido
     if p.get('faq'):
         lds.append(faq_ld(p['faq']))
     elif p.get('kind') == 'product' and p['prod'].get('faq'):
@@ -247,14 +260,23 @@ def head(s, p):
 <meta property="og:description" content="%(desc)s">
 <meta property="og:url" content="%(canon)s">
 <meta property="og:locale" content="ro_RO">
-<meta name="theme-color" content="%(c1)s">
+%(ogimg)s<meta name="theme-color" content="%(c1)s">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/style.css?v=2">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=%(pub)s" crossorigin="anonymous"></script>
 %(ld)s
 </head>""" % dict(title=esc(title), desc=esc(desc), canon=canon, name=esc(s['name']), c1=s['c1'], pub=PUB,
                     ogt='article' if p.get('kind') in ('article', 'product') else 'website', noindex=noindex,
-                    ld='\n'.join(ldjson(x) for x in lds))
+                    ld='\n'.join(ldjson(x) for x in lds), ogimg=og_tags(s, title))
+
+
+def og_tags(s, title):
+    img = asset(s, 'og-image.jpg')
+    if not img:
+        return '<meta name="twitter:card" content="summary">\n'
+    return ('<meta property="og:image" content="%s">\n<meta property="og:image:width" content="1200">\n'
+            '<meta property="og:image:height" content="630">\n<meta property="og:image:alt" content="%s">\n'
+            '<meta name="twitter:card" content="summary_large_image">\n') % (img, esc(s['name'] + ': ' + s['tagline']))
 
 
 def header(s, p):
@@ -413,8 +435,12 @@ def product_page(s, x):
 def product_ld(s, x):
     d = {"@context": "https://schema.org", "@type": "Product", "name": x['name'], "brand": {"@type": "Brand", "name": x['brand']},
          "description": strip_tags(x['tagline']), "url": url(s, x['slug'])}
-    if x.get('price_eur'):
-        d["offers"] = {"@type": "Offer", "priceCurrency": "EUR", "price": str(x['price_eur']), "availability": "https://schema.org/InStock", "url": x['link']}
+    cur, val = ('RON', x['price_ron']) if x.get('price_ron') else (('EUR', x['price_eur']) if x.get('price_eur') else (None, None))
+    if cur:
+        d["offers"] = {"@type": "Offer", "priceCurrency": cur, "price": str(val), "itemCondition": "https://schema.org/NewCondition",
+                       "availability": "https://schema.org/InStock", "url": x['link'], "priceValidUntil": PRICE_VALID}
+    if asset(s, 'og-image.jpg'):
+        d["image"] = asset(s, 'og-image.jpg')
     return d
 
 
@@ -587,6 +613,7 @@ def build(sid):
     s['id'] = sid
     if os.path.exists(os.path.join(ROOT, 'site_%s_p.py' % sid)):
         productize(s, importlib.import_module('site_%s_p' % sid).CFG)
+    s['assets'] = [n for n in ('og-image.jpg', 'logo.png') if os.path.exists(os.path.join(ROOT, '..', n))]
     out = os.path.join(OUT, sid)
     if os.path.exists(out):
         shutil.rmtree(out)
@@ -607,6 +634,8 @@ def build(sid):
     if s.get('js'):
         with open(os.path.join(out, 'app.js'), 'w') as f:
             f.write(s['js'].strip() + '\n')
+    for n in s['assets']:
+        shutil.copy(os.path.join(ROOT, '..', n), os.path.join(out, n))
     with open(os.path.join(out, 'favicon.svg'), 'w') as f:
         f.write(favicon(s))
     with open(os.path.join(out, 'ads.txt'), 'w') as f:
