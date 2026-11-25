@@ -262,7 +262,7 @@ def head(s, p):
 <meta property="og:locale" content="ro_RO">
 %(ogimg)s<meta name="theme-color" content="%(c1)s">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/style.css?v=2">
+<link rel="stylesheet" href="/style.css?v=3">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=%(pub)s" crossorigin="anonymous"></script>
 %(ld)s
 </head>""" % dict(title=esc(title), desc=esc(desc), canon=canon, name=esc(s['name']), c1=s['c1'], pub=PUB,
@@ -331,8 +331,89 @@ def prod_url(x):
     return '/%s.html' % x['slug']
 
 
-def prod_art(s, x):
+MODERN_CSS = """
+/* v3: aspect modern */
+body{background:#f4f6f9}
+.hero{position:relative;overflow:hidden;padding:46px 0 78px;background:radial-gradient(1200px 400px at 85% -10%,rgba(255,255,255,.22),transparent 60%),linear-gradient(135deg,var(--c1),var(--c2))}
+.hero:after{content:"";position:absolute;right:-120px;bottom:-160px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.07)}
+.hero h1{font-weight:850;letter-spacing:-.8px}
+.pc{border-radius:20px!important;border:1px solid #e6ebf1!important;box-shadow:0 1px 2px rgba(16,24,40,.04),0 8px 24px rgba(16,24,40,.06);transition:transform .18s ease,box-shadow .18s ease;overflow:hidden}
+.pc:hover{transform:translateY(-4px);box-shadow:0 2px 4px rgba(16,24,40,.05),0 18px 40px rgba(16,24,40,.12)}
+.pc .im{background:#fff!important;border-bottom:1px solid #eef1f5}
+.pc .im img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.pc:hover .im img{transform:scale(1.04)}
+.pc .rib{border-radius:99px!important;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.pc h3 a{color:var(--ink);text-decoration:none}.pc h3 a:hover{color:var(--c1)}
+.btn{border-radius:12px;transition:filter .15s ease,transform .15s ease}.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.phero{border-radius:24px!important;box-shadow:0 10px 40px rgba(16,24,40,.10)}
+.phero .im{background:#fff!important;border:1px solid #eef1f5}
+.phero .im{overflow:hidden;padding:0!important}.phero .im img{width:100%;height:100%;max-height:440px;object-fit:cover;border-radius:14px}
+.cmp .ch img{width:100%;max-width:190px;height:120px;object-fit:cover;border-radius:12px}
+.credit{font-size:12px;color:var(--mut);margin:6px 2px 0;text-align:right}
+article.prose,aside.side .card,.tool{border-radius:20px!important}
+"""
+
+
+def prod_art(s, x, eager=False):
+    if x.get('img_local'):
+        w, h = x['img_wh']
+        return '<img src="/img/%s" alt="%s" width="%d" height="%d"%s decoding="async">' % (
+            x['img_local'], esc(x['name']), w, h, '' if eager else ' loading="lazy"')
     return x.get('art') or s.get('art_default', '')
+
+
+# Fotos oficiales de prensa (licencia de uso para medios; sin modificar, con crédito).
+PRESS = {
+    'dji-agras-t50': ('https://mnd-assets.mynewsdesk.com/image/upload/fl_attachment/kconiglt2215uqbsf9jo2p',
+                      'Foto: DJI (material de presă) – Agras T50 și T25'),
+    'dji-agras-t25p': ('https://mnd-assets.mynewsdesk.com/image/upload/fl_attachment/utfe68m2nfn1k62pmci7qq',
+                       'Foto: DJI (material de presă) – de la stânga: Agras T70P, T100 și T25P'),
+    'dji-agras-t70p': ('https://mnd-assets.mynewsdesk.com/image/upload/fl_attachment/utfe68m2nfn1k62pmci7qq',
+                       'Foto: DJI (material de presă) – de la stânga: Agras T70P, T100 și T25P'),
+    'dji-agras-t100': ('https://mnd-assets.mynewsdesk.com/image/upload/fl_attachment/utfe68m2nfn1k62pmci7qq',
+                       'Foto: DJI (material de presă) – de la stânga: Agras T70P, T100 și T25P'),
+    'segway-navimow-i105e': ('https://mma.prnewswire.com/media/2352379/Segway_Robotic.jpg?p=original',
+                             'Foto: Segway Navimow (material de presă) – seria Navimow i'),
+    'ecoflow-delta-3-plus': ('https://mma.prnewswire.com/media/2620507/D3P.jpg?p=original', 'Foto: EcoFlow (material de presă)'),
+    'ecoflow-river-3-plus': ('https://mma.prnewswire.com/media/2620508/R3P.jpg?p=original', 'Foto: EcoFlow (material de presă)'),
+}
+
+
+def fetch_images(s, out):
+    """Descarga las fotos oficiales (campo img) y las reduce a WebP. Si algo falla, se queda la ilustración SVG."""
+    for x in s.get('products', []):
+        if not x.get('img') and x['slug'] in PRESS:
+            x['img'], x['img_credit'] = PRESS[x['slug']]
+    items = [x for x in s.get('products', []) if x.get('img')]
+    if not items:
+        return
+    try:
+        from PIL import Image
+    except ImportError:
+        import subprocess
+        subprocess.run([sys.executable, '-m', 'pip', 'install', '--quiet', 'pillow'], check=False)
+        try:
+            from PIL import Image
+        except ImportError:
+            print('PIL no disponible: se usan ilustraciones')
+            return
+    import io, urllib.request
+    os.makedirs(os.path.join(out, 'img'), exist_ok=True)
+    for x in items:
+        try:
+            req = urllib.request.Request(x['img'], headers={'User-Agent': 'Mozilla/5.0 (site build)'})
+            data = urllib.request.urlopen(req, timeout=30).read()
+            im = Image.open(io.BytesIO(data))
+            im = im.convert('RGBA')  # sin recortes: las licencias de prensa piden la imagen sin modificar
+            bg = Image.new('RGB', im.size, (255, 255, 255))
+            bg.paste(im, mask=im.split()[3])
+            im = bg
+            im.thumbnail((900, 900))
+            name = x['slug'] + '.webp'
+            im.save(os.path.join(out, 'img', name), 'WEBP', quality=82, method=6)
+            x['img_local'], x['img_wh'] = name, im.size
+        except Exception as e:  # noqa
+            print('imagen fallida', x['slug'], e)
 
 
 def price_html(x):
@@ -418,13 +499,14 @@ def product_page(s, x):
     others = [y for y in s['products'] if y['slug'] != x['slug']][:3]
     body = """<div class="phero"><div class="im">%(art)s</div><div><h2>%(n)s</h2><p>%(tl)s</p>
 <p><b>Ideal pentru:</b> %(bf)s</p><div class="pr">%(pr)s</div><p class="disc">%(pn)s</p>
-<p>%(buy)s</p><p class="disc">Linkul duce la %(store)s. %(aff)s</p></div></div>
+<p>%(buy)s</p><p class="disc">Linkul duce la %(store)s. %(aff)s</p></div></div>%(credit)s
 <main class="content"><div class="cols" style="padding:0"><article class="prose"><div class="meta">Actualizat: %(upd)s</div>%(desc)s
 <div class="pros"><div class="p"><h3>Ce ne place</h3><ul>%(pros)s</ul></div><div class="c"><h3>De ținut cont</h3><ul>%(cons)s</ul></div></div>
 <h2>Specificații principale</h2><div class="tw"><table class="t">%(spec)s</table></div><p class="note">%(src)s</p>
 <p>%(buy)s <a class="btn ghost" href="/#compara">Compară cu alte modele</a></p>%(faq)s</article>%(side)s</div>
 <section class="sec"><h2>Alternative</h2>%(alt)s</section></main>""" % dict(
-        art=prod_art(s, x), n=esc(x['name']), tl=x['tagline'], bf=x['best_for'], pr=x['price'],
+        art=prod_art(s, x, eager=True), n=esc(x['name']), tl=x['tagline'], bf=x['best_for'], pr=x['price'],
+        credit=('<p class="credit">%s</p>' % esc(x['img_credit'])) if x.get('img_local') and x.get('img_credit') else '',
         pn=x.get('price_note', 'Preț orientativ; verifică oferta actuală la dealer.'), buy=buy_btn(x), store=x.get('store', 'magazin'),
         aff=s.get('aff_short', ''), upd=UPDATED_RO, desc=x['desc'],
         pros=''.join('<li>%s</li>' % i for i in x['pros']), cons=''.join('<li>%s</li>' % i for i in x['cons']),
@@ -623,6 +705,7 @@ def build(sid):
             s['pages'].append({'slug': x['slug'], 'kind': 'product', 'prod': x, 'title': x['title'], 'desc': x['meta'],
                                'h1': x.get('h1', x['name']), 'lead': x.get('lead', x['tagline']), 'short': x['name'], 'crumb': x['name']})
         s['js'] = (s.get('js') or '') + CMP_JS
+    fetch_images(s, out)
     pages = s['pages'] + std_pages(s)
     s_all = dict(s)
     for p in pages:
@@ -630,7 +713,7 @@ def build(sid):
             page = render(s, p)
             f.write(page if p['slug'] == '404' else relpaths(page))
     with open(os.path.join(out, 'style.css'), 'w') as f:
-        f.write((CSS % s).strip() + '\n' + s.get('css', ''))
+        f.write((CSS % s).strip() + '\n' + MODERN_CSS + s.get('css', ''))
     if s.get('js'):
         with open(os.path.join(out, 'app.js'), 'w') as f:
             f.write(s['js'].strip() + '\n')
