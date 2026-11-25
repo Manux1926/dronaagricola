@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculator cost încălzire: aer condiționat, calorifer sau gaz</title>
+<meta name="description" content="Calculează cât te costă pe lună să încălzești o cameră cu aerul condiționat, cu un calorifer electric sau cu centrala pe gaz, cu prețurile de pe factura ta.">
+<link rel="canonical" href="https://casafarasurprize.online/calculator-cost-incalzire.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article"><meta property="og:locale" content="ro_RO"><meta property="og:site_name" content="Casa Fără Surprize">
+<meta property="og:title" content="Calculator cost încălzire: aer condiționat, calorifer sau gaz"><meta property="og:description" content="Calculează cât te costă pe lună să încălzești o cameră cu aerul condiționat, cu un calorifer electric sau cu centrala pe gaz, cu prețurile de pe factura ta."><meta property="og:url" content="https://casafarasurprize.online/calculator-cost-incalzire.html">
+<meta property="og:image" content="https://casafarasurprize.online/og-image.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+@@STYLE@@
+<link rel="stylesheet" href="incalzire.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://casafarasurprize.online/"}, {"@type": "ListItem", "position": 2, "name": "Încălzire ieftină", "item": "https://casafarasurprize.online/incalzire-ieftina.html"}, {"@type": "ListItem", "position": 3, "name": "Calculator: cât costă pe lună să încălzești o cameră", "item": "https://casafarasurprize.online/calculator-cost-incalzire.html"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "De ce iese centrala pe gaz atât de ieftină?", "acceptedAnswer": {"@type": "Answer", "text": "Pentru că prețul gazelor pentru casnici e plafonat la 0,31 lei/kWh până la 31 martie 2027, mult sub prețul curentului. Dacă ai deja centrală, aerul condiționat merită mai ales pentru camere separate sau pentru perioadele de tranziție."}}, {"@type": "Question", "name": "Ce SCOP are un aer condiționat obișnuit?", "acceptedAnswer": {"@type": "Answer", "text": "Aparatele inverter moderne au de regulă un SCOP între 3 și 5 pe încălzire. Valoarea exactă e pe eticheta energetică a modelului."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Calculator: cât costă pe lună să încălzești o cameră", "url": "https://casafarasurprize.online/calculator-cost-incalzire.html", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "inLanguage": "ro-RO", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RON"}}</script>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="058f4e66-811a-4f03-a044-f6a8a34dad64"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3913582839475889" crossorigin="anonymous"></script>
+</head>
+<body>
+@@NAV@@
+<main><div class="wrap">
+<div class="crumb"><a href="./">Acasă</a> › <a href="incalzire-ieftina.html">Încălzire ieftină</a></div>
+<article>
+<h1>Calculator: cât costă pe lună să încălzești o cameră</h1>
+<div class="meta">Publicat pe 25 noiembrie 2026 · Actualizat: 25 noiembrie 2026 · Casa Fără Surprize</div>
+<p class="lead">Compară aerul condiționat inverter, caloriferul electric și centrala pe gaz pentru camera ta.</p>
+<div class="note">Calculatorul compară costul aceleiași călduri produse cu trei surse: aer condiționat inverter (pompă de căldură aer-aer), un aparat electric clasic (calorifer cu ulei, convector, panou) și o centrală pe gaz. Rezultatele sunt orientative.</div>
+<div class="calc" id="calc"><div class="g">
+<div><label for="mp">Suprafața camerei (mp)</label><input id="mp" type="number" min="1" value="20"></div>
+<div><label for="iz">Izolația</label><select id="iz"><option value="50">Bună (casă nouă, termoizolată)</option><option value="80" selected>Medie (bloc reabilitat)</option><option value="120">Slabă (bloc vechi, neizolat)</option></select></div>
+<div><label for="ore">Ore de încălzire pe zi</label><input id="ore" type="number" min="1" max="24" value="8"></div>
+<div><label for="pe">Preț curent <small>(lei/kWh, final)</small></label><input id="pe" type="number" step="0.01" value="1.45"></div>
+<div><label for="pg">Preț gaz <small>(lei/kWh, final)</small></label><input id="pg" type="number" step="0.01" value="0.31"></div>
+<div><label for="scop">Eficiența aerului condiționat <small>(SCOP)</small></label><input id="scop" type="number" step="0.1" value="3.5"></div>
+</div>
+<div class="kp"><div class="best"><span>Aer condiționat inverter</span><b id="rAc">–</b></div><div><span>Calorifer / convector / panou</span><b id="rEl">–</b></div><div><span>Centrală pe gaz</span><b id="rGas">–</b></div></div>
+<p id="rTxt" style="margin-top:12px"></p></div>
+<script>(function(){function $(i){return document.getElementById(i)}function f(x){return Math.round(x).toLocaleString('ro-RO')+' lei/lună'}
+function run(){var mp=+$('mp').value||0,w=+$('iz').value,h=+$('ore').value||0,pe=+$('pe').value||0,pg=+$('pg').value||0,sc=+$('scop').value||3;
+var kwh=mp*w/1000*h*30*0.6;var ac=kwh/sc*pe,el=kwh*pe,gas=kwh/0.9*pg;
+$('rAc').textContent=f(ac);$('rEl').textContent=f(el);$('rGas').textContent=f(gas);
+$('rTxt').innerHTML='Necesarul estimat: <b>'+Math.round(kwh).toLocaleString('ro-RO')+' kWh de căldură pe lună</b>. Pe un sezon de 5 luni, aerul condiționat te costă cu aproximativ <b>'+Math.round((el-ac)*5).toLocaleString('ro-RO')+' lei mai puțin</b> decât un aparat electric clasic.'}
+document.getElementById('calc').addEventListener('input',run);run()})();</script>
+<h2>Cum calculăm</h2>
+<ul><li><strong>Necesarul de căldură</strong> = suprafața × pierderile pe metru pătrat (50, 80 sau 120 W/mp, după izolație) × orele pe zi × 30 de zile × 0,6. Factorul de 0,6 ține cont că aparatul nu merge tot timpul la putere maximă.</li>
+<li><strong>Aerul condiționat</strong> consumă necesarul împărțit la SCOP (eficiența sezonieră). Un SCOP de 3,5 înseamnă 3,5 kWh de căldură pentru 1 kWh de curent.</li>
+<li><strong>Aparatele electrice clasice</strong> (ulei, convector, infraroșu) consumă 1 kWh de curent pentru 1 kWh de căldură.</li>
+<li><strong>Centrala pe gaz</strong>: am presupus un randament de 90%.</li></ul>
+<h2>De unde vin prețurile implicite</h2>
+<p>Prețul gazelor pentru consumatorii casnici e plafonat la 0,31 lei/kWh în perioada 1 aprilie 2026 – 31 martie 2027, potrivit ordonanței privind prețul gazelor. La curent, prețul final variază mult între furnizori: cei mai mulți consumatori casnici plătesc în medie aproximativ 1,45 lei/kWh cu TVA, după estimarea Infocons, dar există oferte mai mici și reînnoiri de peste 2 lei/kWh. Pune prețul de pe factura ta pentru un rezultat exact.</p>
+<p>Vezi și <a href="incalzire-ieftina.html">aparatele recomandate și comparația</a>.</p>
+<h2>Întrebări frecvente</h2><h3>De ce iese centrala pe gaz atât de ieftină?</h3><p>Pentru că prețul gazelor pentru casnici e plafonat la 0,31 lei/kWh până la 31 martie 2027, mult sub prețul curentului. Dacă ai deja centrală, aerul condiționat merită mai ales pentru camere separate sau pentru perioadele de tranziție.</p><h3>Ce SCOP are un aer condiționat obișnuit?</h3><p>Aparatele inverter moderne au de regulă un SCOP între 3 și 5 pe încălzire. Valoarea exactă e pe eticheta energetică a modelului.</p>
+</article>
+<div class="related"><h3>Din aceeași secțiune</h3><ul><li><a href="incalzire-ieftina.html">Încălzire ieftină: aparatele recomandate și comparația</a></li><li><a href="aer-conditionat-incalzire-iarna.html">Încălzirea cu aerul condiționat iarna: cât consumă</a></li><li><a href="calorifer-ulei-convector-infrarosu.html">Calorifer cu ulei, convector sau panou infraroșu?</a></li><li><a href="putere-incalzire-pe-mp.html">De câtă putere de încălzire ai nevoie pe metru pătrat</a></li></ul></div>
+<p class="disc">Informațiile au caracter general și nu înlocuiesc consultanța unui instalator sau electrician autorizat. Verifică întotdeauna capacitatea instalației electrice înainte să folosești aparate de 2.000 W sau mai mult. Prețurile și specificațiile sunt cele afișate de magazine la data actualizării și se pot schimba.</p>
+</div></main>
+@@FOOT@@
+</body>
+</html>
