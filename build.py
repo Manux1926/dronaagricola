@@ -233,7 +233,7 @@ def head(s, p):
                     "inLanguage": "ro-RO", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RON"}})
     if p.get('kind') == 'article':
         lds.append({"@context": "https://schema.org", "@type": "Article", "headline": p['h1'][:110], "description": desc,
-                    "inLanguage": "ro-RO", "datePublished": p.get('date', UPDATED), "dateModified": UPDATED,
+                    "inLanguage": "ro-RO", "datePublished": p.get('date', UPDATED), "dateModified": max(p.get('date', UPDATED), UPDATED),
                     "mainEntityOfPage": canon, "author": {"@type": "Organization", "name": s['name'], "url": url(s, 'despre')},
                     "publisher": {"@type": "Organization", "name": s['name'], "url": url(s, 'index'),
                                   "logo": {"@type": "ImageObject", "url": asset(s, 'logo.png') or 'https://%s/favicon.svg' % s['domain']}}})
@@ -376,6 +376,9 @@ PRESS = {
                              'Foto: Segway Navimow (material de presă) – seria Navimow i'),
     'ecoflow-delta-3-plus': ('https://mma.prnewswire.com/media/2620507/D3P.jpg?p=original', 'Foto: EcoFlow (material de presă)'),
     'ecoflow-river-3-plus': ('https://mma.prnewswire.com/media/2620508/R3P.jpg?p=original', 'Foto: EcoFlow (material de presă)'),
+    'bluetti-premium-100-v2': ('https://mma.prnewswire.com/media/2724776/0704.jpg?p=original', 'Foto: BLUETTI (material de presă)'),
+    'bosch-easydrill-18v-40': ('https://www.bosch-presse.de/pressportal/de/media/dam_images/pi11432/2_easydrill_18v-40_anwendung_img_w1280-2.jpg',
+                               'Foto: Bosch'),
 }
 
 
@@ -610,6 +613,8 @@ def fill(s, body):
         rest = [x for x in s['products'] if not x.get('compare', True)]
         body = body.replace('{{PRODUCTS}}', prod_grid(s, main)).replace('{{COMPARE}}', compare_html(s))
         body = body.replace('{{EXTRA_PRODUCTS}}', prod_grid(s, rest) if rest else '')
+        body = re.sub(r'\{\{CARDS:([a-z0-9,-]+)\}\}', lambda m: prod_grid(
+            s, [x for sl in m.group(1).split(',') for x in s['products'] if x['slug'] == sl]), body)
     return body
 
 
@@ -631,7 +636,7 @@ def render(s, p):
     elif kind == 'article':
         h += """<section class="pagehead"><div class="wrap"><div class="crumbs"><a href="/">%s</a> › <a href="/ghiduri.html">Ghiduri</a></div><h1>%s</h1><p>%s</p></div></section>
 <main class="content"><div class="wrap cols"><article class="prose"><div class="meta">Actualizat: %s · %s</div>%s%s</article>%s</div></main>""" % (
-            esc(s['name']), p['h1'], p['lead'], UPDATED_RO, s['name'], p['body'], faq_html(p.get('faq')), side(s, p))
+            esc(s['name']), p['h1'], p['lead'], p.get('date_ro', UPDATED_RO), s['name'], p['body'], faq_html(p.get('faq')), side(s, p))
     else:
         h += """<section class="pagehead"><div class="wrap"><div class="crumbs"><a href="/">%s</a></div><h1>%s</h1><p>%s</p></div></section>
 <main class="content"><div class="wrap"><article class="prose">%s</article></div></main>""" % (esc(s['name']), p['h1'], p.get('lead', ''), p['body'])
@@ -693,8 +698,14 @@ def build(sid):
     mod = importlib.import_module('site_' + sid)
     s = mod.SITE
     s['id'] = sid
+    extra = importlib.import_module('site_%s_a' % sid) if os.path.exists(os.path.join(ROOT, 'site_%s_a.py' % sid)) else None
+    if extra:  # artículos nuevos y correcciones de productos, sin tocar los archivos grandes
+        s['pages'] += getattr(extra, 'PAGES', [])
     if os.path.exists(os.path.join(ROOT, 'site_%s_p.py' % sid)):
         productize(s, importlib.import_module('site_%s_p' % sid).CFG)
+    if extra:
+        for x in s.get('products', []):
+            x.update(getattr(extra, 'PATCH', {}).get(x['slug'], {}))
     s['assets'] = [n for n in ('og-image.jpg', 'logo.png') if os.path.exists(os.path.join(ROOT, '..', n))]
     out = os.path.join(OUT, sid)
     if os.path.exists(out):
