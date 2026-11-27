@@ -297,8 +297,24 @@ def header(s, p):
 </div></header>""" % (logo_svg(s), esc(s['name']), ''.join(links))
 
 
+MONTHS_RO = ['ianuarie', 'februarie', 'martie', 'aprilie', 'mai', 'iunie', 'iulie', 'august', 'septembrie', 'octombrie',
+             'noiembrie', 'decembrie']
+
+
+def date_ro(d):
+    y, m, dd = d.split('-')
+    return '%d %s %s' % (int(dd), MONTHS_RO[int(m) - 1], y)
+
+
+def newest_arts(s):
+    # Artículos de la web, los más recientes primero (para pie, barra lateral y enlaces internos).
+    arts = [p for p in s['pages'] if p.get('kind') == 'article']
+    return sorted(arts, key=lambda p: p.get('date', UPDATED), reverse=True)
+
+
 def footer(s):
-    arts = [p for p in s['pages'] if p.get('kind') == 'article'][:5]
+    arts = newest_arts(s)[:6]
+    last = max([UPDATED] + [p.get('date', UPDATED) for p in s['pages']])
     tools = [p for p in s['pages'] if p.get('kind') == 'tool' or p['slug'] == 'index']
     col1 = 'Calculatoare'
     if s.get('products'):
@@ -317,12 +333,13 @@ def footer(s):
 </html>""" % (logo_svg(s), esc(s['name']), s['tagline'],
               col1, ''.join('<li><a href="%s">%s</a></li>' % ('/' if t['slug'] == 'index' else '/' + t['slug'] + '.html', t.get('short') or t['h1']) for t in tools),
               ''.join('<li><a href="/%s.html">%s</a></li>' % (a['slug'], a.get('short', a['h1'])) for a in arts),
-              esc(s['name']), UPDATED_RO, NAV_JS,
+              esc(s['name']), date_ro(last), NAV_JS,
               '<script src="/app.js?v=2" defer></script>' if s.get('js') else '')
 
 
 def side(s, p):
-    others = [x for x in s['pages'] if x.get('kind') in ('article', 'tool', 'product') and x['slug'] not in (p['slug'], 'index')][:7]
+    others = [x for x in newest_arts(s) if x['slug'] != p['slug']][:7]
+    others += [x for x in s['pages'] if x.get('kind') in ('tool', 'product') and x['slug'] not in (p['slug'], 'index')][:max(0, 9 - len(others))]
     return """<aside class="side"><div class="card"><h3>%s</h3><p class="note" style="margin:0 0 10px">%s</p><a class="btn" href="%s">%s</a></div>
 <div class="card"><h3>Citește și</h3><ul>%s</ul></div></aside>""" % (
         s['side_title'], s['side_text'], s.get('side_href', '/'), s.get('side_btn', 'Deschide calculatorul'),
@@ -749,7 +766,7 @@ def build(sid):
         if p['slug'] == '404':
             continue
         pr = '1.0' if p['slug'] == 'index' else ('0.9' if p.get('kind') in ('tool', 'product') else ('0.8' if p.get('kind') == 'article' else '0.4'))
-        sm.append('<url><loc>%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>' % (url(s, p['slug']), UPDATED, pr))
+        sm.append('<url><loc>%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>' % (url(s, p['slug']), max(p.get('date', UPDATED), UPDATED), pr))
     sm.append('</urlset>')
     with open(os.path.join(out, 'sitemap.xml'), 'w') as f:
         f.write('\n'.join(sm) + '\n')
