@@ -237,7 +237,7 @@ def head(s, p):
                     "inLanguage": "ro-RO", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "RON"}})
     if p.get('kind') == 'article':
         lds.append({"@context": "https://schema.org", "@type": "Article", "headline": p['h1'][:110], "description": desc,
-                    "inLanguage": "ro-RO", "datePublished": p.get('date', UPDATED), "dateModified": max(p.get('date', UPDATED), UPDATED),
+                    "inLanguage": "ro-RO", "datePublished": p.get('date', UPDATED), "dateModified": max(p.get('modified', p.get('date', UPDATED)), UPDATED),
                     "mainEntityOfPage": canon, "author": {"@type": "Organization", "name": s['name'], "url": url(s, 'despre')},
                     "publisher": {"@type": "Organization", "name": s['name'], "url": url(s, 'index'),
                                   "logo": {"@type": "ImageObject", "url": asset(s, 'logo.png') or 'https://%s/favicon.svg' % s['domain']}}})
@@ -314,7 +314,7 @@ def newest_arts(s):
 
 def footer(s):
     arts = newest_arts(s)[:6]
-    last = max([UPDATED] + [p.get('date', UPDATED) for p in s['pages']])
+    last = max([UPDATED] + [p.get('modified', p.get('date', UPDATED)) for p in s['pages']])
     tools = [p for p in s['pages'] if p.get('kind') == 'tool' or p['slug'] == 'index']
     col1 = 'Calculatoare'
     if s.get('products'):
@@ -766,7 +766,7 @@ def build(sid):
         if p['slug'] == '404':
             continue
         pr = '1.0' if p['slug'] == 'index' else ('0.9' if p.get('kind') in ('tool', 'product') else ('0.8' if p.get('kind') == 'article' else '0.4'))
-        sm.append('<url><loc>%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>' % (url(s, p['slug']), max(p.get('date', UPDATED), UPDATED), pr))
+        sm.append('<url><loc>%s</loc><lastmod>%s</lastmod><priority>%s</priority></url>' % (url(s, p['slug']), max(p.get('modified', p.get('date', UPDATED)), UPDATED), pr))
     sm.append('</urlset>')
     with open(os.path.join(out, 'sitemap.xml'), 'w') as f:
         f.write('\n'.join(sm) + '\n')
