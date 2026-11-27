@@ -4,6 +4,10 @@ import json, os, sys, html, importlib, re, shutil
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, '..', 'out')
+# Verificación de las 5 webs en Profitshare (las mismas etiquetas en todas; cada web valida la suya).
+PS_META = ''.join("<meta name='profitshareid' content='%s' />\n" % x for x in (
+    '4b117ecedd5396bdf8d4694a050ff64c', 'a4904ead5cafa76fa39f06a137dbe139', '98eda5bf57e12769b802a733f1f129be',
+    'b33f3182567693567e2349dac833116f', '295f669d182e8b3e2cc9c129dccc2bf5'))
 PUB = 'ca-pub-3913582839475889'
 UPDATED = '2026-11-24'
 UPDATED_RO = '24 noiembrie 2026'
@@ -246,6 +250,7 @@ def head(s, p):
     elif p.get('kind') == 'product' and p['prod'].get('faq'):
         lds.append(faq_ld(p['prod']['faq']))
     noindex = '<meta name="robots" content="noindex">' if p['slug'] == '404' else ''
+    noindex += PS_META
     return """<!doctype html>
 <html lang="ro">
 <head>
